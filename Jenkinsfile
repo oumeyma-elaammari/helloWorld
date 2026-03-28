@@ -1,47 +1,48 @@
 pipeline {
     agent any
-
+    
     stages {
         stage('Checkout') {
             steps {
-                git branch: 'master', url: 'https://github.com/oumeyma-elaammari/HelloWorld.git'
+                checkout scm
+                echo 'Code retrieved from Git'
             }
         }
-
-        stage('Compile HelloWorld') {
+        
+        stage('Build HelloWorld') {
             steps {
+                echo 'Compiling HelloWorld...'
                 bat 'javac HelloWorld.java'
-            }
-        }
-
-        stage('Run HelloWorld') {
-            steps {
                 bat 'java HelloWorld'
             }
         }
-
-        stage('Compile Merci') {
+        
+        stage('Build Merci') {
             steps {
+                echo 'Compiling Merci...'
                 bat 'javac Merci.java'
+                bat  'java Merci'
             }
         }
-
-        stage('Run Merci') {
+        
+        stage('Build DeRien') {
             steps {
-                bat 'java Merci'
-            }
-        }
-
-        stage('Compile DeRien') {
-            steps {
+                echo 'Compiling DeRien...'
                 bat 'javac DeRien.java'
-            }
-        }
-
-        stage('Run DeRien') {
-            steps {
                 bat 'java DeRien'
             }
+        }
+    }
+    
+    post {
+        always {
+            echo 'Pipeline completed'
+        }
+        success {
+            echo '✅ All builds succeeded!'
+        }
+        failure {
+            echo '❌ A build failed'
         }
     }
 }
